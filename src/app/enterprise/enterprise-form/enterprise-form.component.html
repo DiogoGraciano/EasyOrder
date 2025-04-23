@@ -1,0 +1,80 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cadastro de Empresa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="enterpriseForm">
+    <ion-list>
+      <ion-item>
+        <ion-input formControlName="legalName" labelPlacement="floating" label="Razão Social: " type="text"></ion-input>
+        <p>
+        @if(hasError('legalName', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('legalName', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('legalName', 'maxlength')) {
+          O campo deve ter no máximo 150 caracteres
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="tradeName" labelPlacement="floating" label="Nome Fantasia: " type="text"></ion-input>
+        <p>
+        @if(hasError('tradeName', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('tradeName', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('tradeName', 'maxlength')) {
+          O campo deve ter no máximo 150 caracteres
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="cnpj" labelPlacement="floating" label="CNPJ" type="text" [maskito]="cnpjMask"
+          [maskitoElement]="maskitoElement" />
+        <p>
+        @if(hasError('cnpj', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('cnpj', 'invalidCnpj')) {
+          CNPJ inválido
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="logo" labelPlacement="floating" label="Logo (URL)" type="url"></ion-input>
+        <p>
+        @if(hasError('logo', 'invalidUrl')) {
+          O campo de logo deve ser uma URL válida
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="foundationDate" labelPlacement="floating" label="Data de Fundação" [maskito]="dateMask"
+          [maskitoElement]="maskitoElement" />
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="address" labelPlacement="floating" label="Endereço" type="text" />
+        <p>
+        @if(hasError('address', 'required')) {
+          O campo é obrigatório
+        }
+        </p>
+      </ion-item>
+    </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [disabled]="enterpriseForm.invalid" (click)="save()">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </form>
+</ion-content>
