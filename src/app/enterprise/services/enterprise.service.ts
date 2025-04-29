@@ -35,7 +35,7 @@ export class EnterpriseService {
     return enterprise.id ? this.update(enterprise) : this.add(enterprise);
   }
 
-  remove(enterprise: Enterprise): Observable<void> {
-    return this.http.delete<void>(environment.apiUrl+"enterprises/"+enterprise.id);
+  remove(enterprise: Enterprise): Observable<Enterprise> {
+    return this.http.delete<Enterprise>(environment.apiUrl+"enterprises/"+enterprise.id);
   }
 }

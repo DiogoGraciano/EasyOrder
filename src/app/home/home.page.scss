@@ -1,0 +1,40 @@
+// Dashboard styles
+.big-number {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+ion-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+ion-icon {
+  opacity: 0.8;
+}
+
+// Cards with indicators
+ion-card-header {
+  padding-bottom: 8px;
+}
+
+ion-card-content {
+  padding-top: 0;
+}
+
+// Order list styling
+ion-list {
+  margin-bottom: 16px;
+}
+
+// Quick actions grid
+ion-grid ion-button {
+  margin: 4px 0;
+}
+
+@media (max-width: 768px) {
+  .big-number {
+    font-size: 1.5rem;
+  }
+}

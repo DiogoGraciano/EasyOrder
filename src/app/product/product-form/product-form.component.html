@@ -1,0 +1,90 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cadastro de Produto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="productForm">
+    <ion-list>
+      <ion-item>
+        <ion-input formControlName="name" labelPlacement="floating" label="Nome: " type="text"></ion-input>
+        <p>
+        @if(hasError('name', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('name', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('name', 'maxlength')) {
+          O campo deve ter no máximo 150 caracteres
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-textarea formControlName="description" labelPlacement="floating" label="Descrição: " rows="4"></ion-textarea>
+        <p>
+        @if(hasError('description', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('description', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('description', 'maxlength')) {
+          O campo deve ter no máximo 500 caracteres
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="price" labelPlacement="floating" label="Preço: " type="text"></ion-input>
+        <p>
+        @if(hasError('price', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('price', 'min')) {
+          O preço deve ser maior ou igual a zero
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="stock" labelPlacement="floating" label="Estoque: " type="number" min="0" step="1"></ion-input>
+        <p>
+        @if(hasError('stock', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('stock', 'min')) {
+          O estoque deve ser maior ou igual a zero
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="photo" labelPlacement="floating" label="Foto (URL)" type="url"></ion-input>
+        <p>
+        @if(hasError('photo', 'invalidUrl')) {
+          O campo de foto deve ser uma URL válida
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-select formControlName="companyId" labelPlacement="floating" label="Empresa">
+          <ion-select-option *ngFor="let enterprise of enterprises" [value]="enterprise.id">
+            {{ enterprise.tradeName }}
+          </ion-select-option>
+        </ion-select>
+        <p>
+        @if(hasError('companyId', 'required')) {
+          O campo é obrigatório
+        }
+        </p>
+      </ion-item>
+    </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [disabled]="productForm.invalid" (click)="submitForm()">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </form>
+</ion-content> 

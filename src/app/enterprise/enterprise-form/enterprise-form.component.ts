@@ -46,7 +46,7 @@ export class EnterpriseFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = parseInt(this.activatedRoute.snapshot.params['id']);
+    const id = this.activatedRoute.snapshot.params['id'];
     if (id) {
       this.enterpriseService.getById(id).pipe(
         take(1)
@@ -75,7 +75,7 @@ export class EnterpriseFormComponent implements OnInit {
       const enterprise: Enterprise = {
         ...formValue,
         foundationDate: parseDateMask(formValue.foundationDate),
-        id: parseInt(this.activatedRoute.snapshot.params['id'])
+        id: this.activatedRoute.snapshot.params['id']
       };
 
       this.enterpriseService.save(enterprise).subscribe(() => {

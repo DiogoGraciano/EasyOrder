@@ -7,6 +7,16 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { provideHttpClient } from '@angular/common/http';
+import { addIcons } from 'ionicons';
+import { businessOutline, homeOutline, peopleOutline, cubeOutline, cartOutline } from 'ionicons/icons';
+
+addIcons({
+  'business-outline-sharp': businessOutline,
+  'people-outline-sharp': peopleOutline,
+  'cube-outline-sharp': cubeOutline,
+  'cart-outline-sharp': cartOutline,
+  'home-outline-sharp': homeOutline
+});
 
 @NgModule({
   declarations: [AppComponent],

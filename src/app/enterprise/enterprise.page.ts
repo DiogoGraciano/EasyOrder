@@ -34,10 +34,12 @@ export class EnterprisePage implements OnInit, ViewWillEnter {
           {
             text: 'Sim',
             handler: () => {
-              this.enterpriseService.remove(enterprise);
-              this.enterpriseService.getList().subscribe(enterprises => {
-                this.enterpriseList = enterprises;
-              });
+              this.enterpriseService.remove(enterprise).subscribe();
+              setTimeout(() => {
+                this.enterpriseService.getList().subscribe(enterprises => {
+                  this.enterpriseList = enterprises;
+                });
+              }, 500);
             },
           },
           'Não',

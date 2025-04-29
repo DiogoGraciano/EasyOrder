@@ -1,0 +1,54 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Pedidos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Lista de Pedidos</ion-label>
+    </ion-list-header>
+    @for(order of orderList; track order.id) {
+    <ion-item>
+      <ion-text class="order-info">
+        <h2>Pedido #{{ order.orderNumber }}</h2>
+        <h3><strong>Data: </strong> {{ order.orderDate | date:'dd/MM/yyyy' }} </h3>
+        <h3><strong>Status: </strong> <ion-badge [color]="order.status === 'completed' ? 'success' : (order.status === 'cancelled' ? 'danger' : 'warning')">{{ getStatusLabel(order.status) }}</ion-badge></h3>
+        <h4><strong>Cliente: </strong> {{ getCustomerName(order.customerId) }}</h4>
+        <h4><strong>Empresa: </strong> {{ getEnterpriseName(order.companyId) }}</h4>
+        <h4><strong>Valor Total: </strong> R$ {{ order.totalAmount | number:'1.2-2' }}</h4>
+        <ion-button size="small" [routerLink]="['details', order.id]">
+          <ion-icon name="eye" slot="start"></ion-icon>
+          Detalhes
+        </ion-button>
+        <ion-button size="small" [routerLink]="['edit', order.id]">
+          <ion-icon name="create" slot="start"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button size="small" (click)="remove(order)">
+          <ion-icon name="trash" slot="end"></ion-icon>
+          Excluir
+        </ion-button>
+      </ion-text>
+    </ion-item>
+    }
+    @empty {
+    <ion-item>Lista de pedidos vazia, cadastre um novo pedido!</ion-item>
+    }
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['new']">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content> 

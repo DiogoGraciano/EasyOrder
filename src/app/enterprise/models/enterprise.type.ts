@@ -1,5 +1,5 @@
 export type Enterprise = {
-    id?: number,
+    id?: string,
     logo: null|string,
     legalName: string,
     tradeName: string,

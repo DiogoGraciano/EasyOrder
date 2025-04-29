@@ -3,14 +3,131 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Easy Order</ion-title>
+    <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <h1 class="ion-text-center">Bem-vindo ao Easy Order</h1>
+  
+  <!-- Overview Cards -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="3">
+        <ion-card color="primary">
+          <ion-card-header>
+            <ion-card-subtitle>Total de Pedidos</ion-card-subtitle>
+            <ion-card-title class="ion-text-center big-number">{{ totalOrders }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="cart-outline" size="large" class="ion-float-right"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="12" size-md="6" size-lg="3">
+        <ion-card color="medium">
+          <ion-card-header>
+            <ion-card-subtitle>Total de Vendas</ion-card-subtitle>
+            <ion-card-title class="ion-text-center big-number">{{ totalSales | currency:'BRL' }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="cash-outline" size="large" class="ion-float-right"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="12" size-md="6" size-lg="3">
+        <ion-card color="tertiary">
+          <ion-card-header>
+            <ion-card-subtitle>Clientes</ion-card-subtitle>
+            <ion-card-title class="ion-text-center big-number">{{ totalCustomers }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="people-outline" size="large" class="ion-float-right"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      
+      <ion-col size="12" size-md="6" size-lg="3">
+        <ion-card color="dark">
+          <ion-card-header>
+            <ion-card-subtitle>Produtos</ion-card-subtitle>
+            <ion-card-title class="ion-text-center big-number">{{ totalProducts }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="cube-outline" size="large" class="ion-float-right"></ion-icon>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  <!-- Recent Orders -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Pedidos Recentes</ion-card-title>
+      <ion-card-subtitle>{{ pendingOrders }} pedidos pendentes</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="full">
+        <ion-item *ngFor="let order of orders.slice(0, 5)" [routerLink]="['/orders', order.id]">
+          <ion-label>
+            <h2>Pedido #{{ order.orderNumber }}</h2>
+            <p>Data: {{ order.orderDate | date:'short' }}</p>
+            <p>Valor: {{ order.totalAmount | currency:'BRL' }}</p>
+          </ion-label>
+          <ion-badge slot="end" 
+            [color]="order.status === 'pending' ? 'warning' : 
+                    order.status === 'completed' ? 'success' : 'danger'">
+            {{ order.status === 'pending' ? 'Pendente' : 
+               order.status === 'completed' ? 'Completo' : 'Cancelado' }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+      <div *ngIf="orders.length === 0" class="ion-text-center ion-padding">
+        <p>Nenhum pedido encontrado</p>
+      </div>
+      <ion-button expand="block" fill="clear" routerLink="/order">
+        Ver Todos os Pedidos
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  
+  <!-- Quick Actions -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Ações Rápidas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" routerLink="/order/new" size="large">
+              <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+              Novo Pedido
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" routerLink="/customer/new" color="secondary" size="large">
+              <ion-icon name="person-add-outline" slot="start"></ion-icon>
+              Novo Cliente
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" routerLink="/product/new" color="tertiary" size="large">
+              <ion-icon name="cube-outline" slot="start"></ion-icon>
+              Novo Produto
+            </ion-button>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-button expand="block" routerLink="/enterprise/new" color="dark" size="large">
+              <ion-icon name="business-outline" slot="start"></ion-icon>
+              Nova Empresa
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

@@ -4,14 +4,20 @@ import { maskitoDateOptionsGenerator, maskitoNumberOptionsGenerator, maskitoPars
 const dateMask = maskitoDateOptionsGenerator({ mode: 'dd/mm/yyyy', separator: '/' });
 const priceMask = maskitoNumberOptionsGenerator({
   decimalSeparator: ',',
-  min: 0,
-  max: 1000,
   precision: 2,
   thousandSeparator: '.'
 })
 
 const cnpjMask = {
   mask: [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/],
+};
+
+const cpfMask = {
+  mask: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/],
+};
+
+const phoneMask = {
+  mask: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
 };
 
 const maskitoElement: MaskitoElementPredicate = async (el) =>
@@ -28,6 +34,8 @@ export {
   dateMask,
   priceMask,
   cnpjMask,
+  cpfMask,
+  phoneMask,
   maskitoElement,
   parseDateMask,
   formatDateMask

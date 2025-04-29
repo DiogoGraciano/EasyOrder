@@ -106,4 +106,23 @@ export class ApplicationValidators {
         return { invalidCnpj: true };
     }
   }
+
+  static phoneValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+  
+    if (!value) {
+      return null;
+    }
+  
+    const cleanedPhone = String(value).replace(/\D/g, '');
+  
+    // Telefones celulares e fixos no Brasil variam de 10 a 11 dígitos
+    const isValidPhone = /^(\d{10}|\d{11})$/.test(cleanedPhone);
+  
+    if (!isValidPhone) {
+      return { invalidPhone: true };
+    }
+  
+    return null;
+  }
 }

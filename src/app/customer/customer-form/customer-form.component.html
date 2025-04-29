@@ -1,0 +1,91 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cadastro de Cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="customerForm">
+    <ion-list>
+      <ion-item>
+        <ion-input formControlName="name" labelPlacement="floating" label="Nome: " type="text"></ion-input>
+        <p>
+        @if(hasError('name', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('name', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('name', 'maxlength')) {
+          O campo deve ter no máximo 150 caracteres
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="email" labelPlacement="floating" label="Email: " type="email"></ion-input>
+        <p>
+        @if(hasError('email', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('email', 'email')) {
+          Email inválido
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="cpf" labelPlacement="floating" label="CPF" type="text" [maskito]="cpfMask"
+          [maskitoElement]="maskitoElement" />
+        <p>
+        @if(hasError('cpf', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('cpf', 'invalidCpf')) {
+          CPF inválido
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="phone" labelPlacement="floating" label="Telefone" type="text" [maskito]="phoneMask"
+          [maskitoElement]="maskitoElement" />
+        <p>
+        @if(hasError('phone', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('phone', 'invalidPhone')) {
+          Telefone inválido
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="photo" labelPlacement="floating" label="Foto (URL)" type="url"></ion-input>
+        <p>
+        @if(hasError('photo', 'invalidUrl')) {
+          O campo de foto deve ser uma URL válida
+        }
+        </p>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="address" labelPlacement="floating" label="Endereço" type="text" />
+        <p>
+        @if(hasError('address', 'required')) {
+          O campo é obrigatório
+        }
+        @if(hasError('address', 'minlength')) {
+          O campo deve ter no mínimo 3 caracteres
+        }
+        @if(hasError('address', 'maxlength')) {
+          O campo deve ter no máximo 250 caracteres
+        }
+        </p>
+      </ion-item>
+    </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [disabled]="customerForm.invalid" (click)="submitForm()">
+        <ion-icon name="checkmark"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </form>
+</ion-content>
