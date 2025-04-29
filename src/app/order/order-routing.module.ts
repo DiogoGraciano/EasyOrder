@@ -16,10 +16,6 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: OrderFormComponent
-  },
-  {
-    path: 'details/:id',
-    component: OrderFormComponent
   }
 ];
 

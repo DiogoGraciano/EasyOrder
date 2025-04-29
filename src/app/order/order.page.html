@@ -27,10 +27,6 @@
         <h4><strong>Cliente: </strong> {{ getCustomerName(order.customerId) }}</h4>
         <h4><strong>Empresa: </strong> {{ getEnterpriseName(order.companyId) }}</h4>
         <h4><strong>Valor Total: </strong> R$ {{ order.totalAmount | number:'1.2-2' }}</h4>
-        <ion-button size="small" [routerLink]="['details', order.id]">
-          <ion-icon name="eye" slot="start"></ion-icon>
-          Detalhes
-        </ion-button>
         <ion-button size="small" [routerLink]="['edit', order.id]">
           <ion-icon name="create" slot="start"></ion-icon>
           Editar
