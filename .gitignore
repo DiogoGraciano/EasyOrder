@@ -8,7 +8,6 @@
 *.tmp.*
 UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
-db.json
 android
 ios
 

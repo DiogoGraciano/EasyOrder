@@ -1,0 +1,56 @@
+{
+  "customers": [
+    {
+      "id": "91f8",
+      "name": "Enzo Nelson Diogo Silveira",
+      "email": "enzo.nelson.silveira@plani.com.br",
+      "phone": "(61) 36797-165",
+      "photo": "https://www.psicologo.com.br/wp-content/uploads/sou-uma-pessoa-boa-ou-nao.jpg",
+      "cpf": "065.495.125-06",
+      "address": "72870-116 - Quadra Quadra 16 - Valparaiso II - Valparaíso de Goiás - GO"
+    }
+  ],
+  "enterprises": [
+    {
+      "id": "08fc",
+      "legalName": "Henrique e Leonardo Construções ME",
+      "tradeName": "Henrique e Leonardo Construções ME",
+      "logo": "https://static.vecteezy.com/system/resources/previews/047/656/219/non_2x/abstract-logo-design-for-any-corporate-brand-business-company-vector.jpg",
+      "foundationDate": "2020-06-16T03:00:00.000Z",
+      "cnpj": "48859170000152",
+      "address": "07172-400 - Rua Pedrão - 338 - Jardim Presidente Dutra - Guarulhos - SP"
+    }
+  ],
+  "orders": [
+    {
+      "orderNumber": "ORD-1747780397597",
+      "orderDate": "2025-05-20",
+      "status": "pending",
+      "customerId": "91f8",
+      "companyId": "08fc",
+      "totalAmount": 109.95,
+      "notes": "Entrega Urgente",
+      "items": [
+        {
+          "productId": "88b2",
+          "productName": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptop",
+          "quantity": 1,
+          "unitPrice": 109.95,
+          "subtotal": 109.95
+        }
+      ],
+      "id": "d80f"
+    }
+  ],
+  "products": [
+    {
+      "name": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptop",
+      "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+      "price": 109.95,
+      "stock": 5,
+      "photo": "https://dermatosaude.com.br/wp-content/uploads/2016/02/produto-cosmetico-capa-1.jpg",
+      "companyId": "08fc",
+      "id": "88b2"
+    }
+  ]
+}
