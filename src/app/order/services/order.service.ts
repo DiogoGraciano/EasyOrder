@@ -20,12 +20,12 @@ export class OrderService {
     return this.httpClient.get<Order>(`${this.url}/${id}`);
   }
 
-  getByCustomer(customerId: number): Observable<Order[]> {
+  getByCustomer(customerId: string): Observable<Order[]> {
     return this.httpClient.get<Order[]>(`${this.url}?customerId=${customerId}`);
   }
 
-  getByCompany(companyId: number): Observable<Order[]> {
-    return this.httpClient.get<Order[]>(`${this.url}?companyId=${companyId}`);
+  getByCompany(enterpriseId: string): Observable<Order[]> {
+    return this.httpClient.get<Order[]>(`${this.url}?enterpriseId=${enterpriseId}`);
   }
 
   save(order: Order): Observable<Order> {

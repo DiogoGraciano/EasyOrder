@@ -6,6 +6,7 @@ import { EnterpriseService } from '../enterprise/services/enterprise.service';
 import { Enterprise } from '../enterprise/models/enterprise.type';
 import { CustomerService } from '../customer/services/customer.service';
 import { Customer } from '../customer/models/customer.type';
+import { ToastService } from '../core/services/toast.service';
 
 @Component({
   selector: 'app-order',
@@ -19,16 +20,31 @@ export class OrderPage implements OnInit, ViewWillEnter {
   customers: Customer[] = [];
 
   ionViewWillEnter(): void {
-    this.orderService.getList().subscribe(orders => {
-      this.orderList = orders;
+    this.orderService.getList().subscribe({
+      next: (orders) => {
+        this.orderList = orders;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
     
-    this.enterpriseService.getList().subscribe(enterprises => {
-      this.enterprises = enterprises;
+    this.enterpriseService.getList().subscribe({
+      next: (enterprises) => {
+        this.enterprises = enterprises;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
 
-    this.customerService.getList().subscribe(customers => {
-      this.customers = customers;
+    this.customerService.getList().subscribe({
+      next: (customers) => {
+        this.customers = customers;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
   }
 
@@ -36,18 +52,19 @@ export class OrderPage implements OnInit, ViewWillEnter {
     private orderService: OrderService,
     private alertController: AlertController,
     private enterpriseService: EnterpriseService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {}
 
-  getEnterpriseName(companyId: number): string {
-    const enterprise = this.enterprises.find(e => e.id?.toString() === companyId?.toString());
+  getEnterpriseName(enterpriseId: string): string {
+    const enterprise = this.enterprises.find(e => e.id === enterpriseId);
     return enterprise ? enterprise.tradeName : 'Empresa não encontrada';
   }
 
-  getCustomerName(customerId: number): string {
-    const customer = this.customers.find(c => c.id?.toString() === customerId?.toString());
+  getCustomerName(customerId: string): string {
+    const customer = this.customers.find(c => c.id === customerId);
     return customer ? customer.name : 'Cliente não encontrado';
   }
 
@@ -69,12 +86,24 @@ export class OrderPage implements OnInit, ViewWillEnter {
           {
             text: 'Sim',
             handler: () => {
-              this.orderService.remove(order).subscribe();
-              setTimeout(() => {
-                this.orderService.getList().subscribe(orders => {
-                  this.orderList = orders;
-                });
-              }, 500);
+              this.orderService.remove(order).subscribe({
+                next: () => {
+                  this.toastService.showSuccess('Pedido excluído com sucesso!');
+                  setTimeout(() => {
+                    this.orderService.getList().subscribe({
+                      next: (orders) => {
+                        this.orderList = orders;
+                      },
+                      error: (error) => {
+                        this.toastService.handleError(error);
+                      }
+                    });
+                  }, 500);
+                },
+                error: (error) => {
+                  this.toastService.handleError(error);
+                }
+              });
             },
           },
           'Não',

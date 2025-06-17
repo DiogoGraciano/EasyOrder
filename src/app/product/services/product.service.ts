@@ -20,8 +20,8 @@ export class ProductService {
     return this.httpClient.get<Product>(`${this.url}/${id}`);
   }
 
-  getByCompany(companyId: number): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${this.url}?companyId=${companyId}`);
+  getByCompany(enterpriseId: string): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(`${this.url}?enterpriseId=${enterpriseId}`);
   }
 
   save(product: Product): Observable<Product> {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ViewWillEnter } from '@ionic/angular';
 import { Customer } from './models/customer.type';
 import { CustomerService } from './services/customer.service';
+import { ToastService } from '../core/services/toast.service';
 
 @Component({
   selector: 'app-customer',
@@ -13,14 +14,20 @@ export class CustomerPage implements OnInit, ViewWillEnter {
   customerList: Customer[] = [];
 
   ionViewWillEnter(): void {
-    this.customerService.getList().subscribe(customers => {
-      this.customerList = customers;
+    this.customerService.getList().subscribe({
+      next: (customers) => {
+        this.customerList = customers;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
   }
 
   constructor(
     private customerService: CustomerService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {}
@@ -34,12 +41,24 @@ export class CustomerPage implements OnInit, ViewWillEnter {
           {
             text: 'Sim',
             handler: () => {
-              this.customerService.remove(customer).subscribe();
-              setTimeout(() => {
-                this.customerService.getList().subscribe(customers => {
-                  this.customerList = customers;
-                });
-              }, 500);
+              this.customerService.remove(customer).subscribe({
+                next: () => {
+                  this.toastService.showSuccess('Cliente excluído com sucesso!');
+                  setTimeout(() => {
+                    this.customerService.getList().subscribe({
+                      next: (customers) => {
+                        this.customerList = customers;
+                      },
+                      error: (error) => {
+                        this.toastService.handleError(error);
+                      }
+                    });
+                  }, 500);
+                },
+                error: (error) => {
+                  this.toastService.handleError(error);
+                }
+              });
             },
           },
           'Não',

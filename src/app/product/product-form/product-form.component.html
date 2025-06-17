@@ -69,13 +69,13 @@
         </p>
       </ion-item>
       <ion-item>
-        <ion-select formControlName="companyId" labelPlacement="floating" label="Empresa">
+        <ion-select formControlName="enterpriseId" labelPlacement="floating" label="Empresa">
           <ion-select-option *ngFor="let enterprise of enterprises" [value]="enterprise.id">
             {{ enterprise.tradeName }}
           </ion-select-option>
         </ion-select>
         <p>
-        @if(hasError('companyId', 'required')) {
+        @if(hasError('enterpriseId', 'required')) {
           O campo é obrigatório
         }
         </p>

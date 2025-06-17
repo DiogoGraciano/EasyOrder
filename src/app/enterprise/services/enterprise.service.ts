@@ -13,7 +13,7 @@ export class EnterpriseService {
 
   constructor() { }
 
-  getById(id: number): Observable<Enterprise> {
+  getById(id: string): Observable<Enterprise> {
     return this.http.get<Enterprise>(environment.apiUrl+"enterprises/"+id);
   }
 

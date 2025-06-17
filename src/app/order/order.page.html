@@ -25,7 +25,7 @@
         <h3><strong>Data: </strong> {{ order.orderDate | date:'dd/MM/yyyy' }} </h3>
         <h3><strong>Status: </strong> <ion-badge [color]="order.status === 'completed' ? 'success' : (order.status === 'cancelled' ? 'danger' : 'warning')">{{ getStatusLabel(order.status) }}</ion-badge></h3>
         <h4><strong>Cliente: </strong> {{ getCustomerName(order.customerId) }}</h4>
-        <h4><strong>Empresa: </strong> {{ getEnterpriseName(order.companyId) }}</h4>
+        <h4><strong>Empresa: </strong> {{ getEnterpriseName(order.enterpriseId) }}</h4>
         <h4><strong>Valor Total: </strong> R$ {{ order.totalAmount | number:'1.2-2' }}</h4>
         <ion-button size="small" [routerLink]="['edit', order.id]">
           <ion-icon name="create" slot="start"></ion-icon>

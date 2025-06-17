@@ -32,7 +32,7 @@
         <h3><strong>Descrição: </strong> {{ product.description }} </h3>
         <h4><strong>Preço: </strong> R$ {{product.price | number:'1.2-2'}}</h4>
         <h4><strong>Estoque: </strong> {{product.stock}}</h4>
-        <h4><strong>Empresa: </strong> {{ getEnterpriseName(product.companyId) }}</h4>
+        <h4><strong>Empresa: </strong> {{ getEnterpriseName(product.enterpriseId) }}</h4>
         <ion-button size="small" [routerLink]="['edit', product.id]">
           <ion-icon name="create" slot="start"></ion-icon>
           Editar

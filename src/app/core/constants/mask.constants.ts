@@ -30,6 +30,15 @@ const formatDateMask = (date: Date) => {
   return maskitoStringifyDate(date,{mode: 'dd/mm/yyyy',separator:"/"});
 }
 
+const formatISODateToBR = (isoDate: string): string => {
+  if (!isoDate) return '';
+  
+  if (isoDate.includes('/')) return isoDate;
+  
+  const [year, month, day] = isoDate.split('-');
+  return `${day}/${month}/${year}`;
+}
+
 export {
   dateMask,
   priceMask,
@@ -38,5 +47,6 @@ export {
   phoneMask,
   maskitoElement,
   parseDateMask,
-  formatDateMask
+  formatDateMask,
+  formatISODateToBR
 }

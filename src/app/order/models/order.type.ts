@@ -1,18 +1,18 @@
 export interface Order {
-  id?: number;
+  id?: string;
   orderNumber?: string;
   orderDate: Date;
   status: 'pending' | 'completed' | 'cancelled';
   totalAmount: number;
-  customerId: number;
-  companyId: number;
+  customerId: string;
+  enterpriseId: string;
   items: OrderItem[];
   notes?: string;
 }
 
 export interface OrderItem {
-  id?: number;
-  productId: number;
+  id?: string;
+  productId: string;
   productName: string;
   quantity: number;
   unitPrice: number;

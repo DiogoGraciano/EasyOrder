@@ -11,6 +11,7 @@ import { Enterprise } from '../../enterprise/models/enterprise.type';
 import { Product } from '../../product/models/product.type';
 import { priceMask } from 'src/app/core/constants/mask.constants';
 import { maskitoParseNumber } from '@maskito/kit';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-order-form',
@@ -35,7 +36,8 @@ export class OrderFormComponent implements OnInit {
     private router: Router,
     private customerService: CustomerService,
     private enterpriseService: EnterpriseService,
-    private productService: ProductService
+    private productService: ProductService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -44,52 +46,74 @@ export class OrderFormComponent implements OnInit {
       orderDate: [new Date().toISOString(), [Validators.required]],
       status: ['pending', [Validators.required]],
       customerId: ['', [Validators.required]],
-      companyId: ['', [Validators.required]],
+      enterpriseId: ['', [Validators.required]],
       totalAmount: [{ value: 0, disabled: true }],
       notes: [''],
       items: this.formBuilder.array([])
     });
 
-    this.customerService.getList().subscribe(customers => {
-      this.customers = customers;
+    this.customerService.getList().subscribe({
+      next: (customers) => {
+        this.customers = customers;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
 
-    this.enterpriseService.getList().subscribe(enterprises => {
-      this.enterprises = enterprises;
+    this.enterpriseService.getList().subscribe({
+      next: (enterprises) => {
+        this.enterprises = enterprises;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
 
-    this.productService.getList().subscribe(products => {
-      this.products = products;
+    this.productService.getList().subscribe({
+      next: (products) => {
+        this.products = products;
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
 
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
-      this.orderService.getById(id).subscribe(order => {
-        this.order = order;
-        
-        this.orderForm.patchValue({
-          orderNumber: order.orderNumber,
-          orderDate: order.orderDate,
-          status: order.status,
-          customerId: order.customerId,
-          companyId: order.companyId,
-          notes: order.notes,
-          totalAmount: order.totalAmount
-        });
-
-        // Adicionar os itens existentes ao formulário
-        order.items.forEach(item => {
-          this.addItem(item);
-          // Carregar informações do produto
-          this.productService.getById(item.productId.toString()).subscribe(product => {
-            this.selectedProducts[item.productId.toString()] = product;
+      this.orderService.getById(id).subscribe({
+        next: (order) => {
+          this.order = order;
+          
+          this.orderForm.patchValue({
+            orderNumber: order.orderNumber,
+            orderDate: order.orderDate,
+            status: order.status,
+            customerId: order.customerId,
+            enterpriseId: order.enterpriseId,
+            notes: order.notes,
+            totalAmount: order.totalAmount
           });
-        });
+
+          order.items.forEach(item => {
+            this.addItem(item);
+            this.productService.getById(item.productId.toString()).subscribe({
+              next: (product) => {
+                this.selectedProducts[item.productId.toString()] = product;
+              },
+              error: (error) => {
+                this.toastService.handleError(error);
+              }
+            });
+          });
+        },
+        error: (error) => {
+          this.toastService.handleError(error);
+        }
       });
     }
 
-    // Atualizar valor total quando os itens mudarem
     this.items.valueChanges.subscribe(() => {
       this.updateTotalAmount();
     });
@@ -111,7 +135,7 @@ export class OrderFormComponent implements OnInit {
     // Atualizar preço unitário quando o produto mudar
     itemForm.get('productId')?.valueChanges.subscribe(productId => {
       if (productId) {
-        const product = this.products.find(p => p.id == productId);
+        const product = this.products.find(p => p.id === productId);
         if (product) {
           this.selectedProducts[productId.toString()] = product;
           itemForm.patchValue({
@@ -132,9 +156,9 @@ export class OrderFormComponent implements OnInit {
   }
 
   updateItemSubtotal(itemForm: FormGroup): void {
-    const quantity = itemForm.get('quantity')?.value || 0;
-    const unitPrice = itemForm.get('unitPrice')?.value || 0;
-    const subtotal = quantity * unitPrice;
+    const quantity = parseFloat(itemForm.get('quantity')?.value || '0');
+    const unitPrice = parseFloat(itemForm.get('unitPrice')?.value || '0');
+    const subtotal = parseFloat((quantity * unitPrice).toFixed(2));
     
     itemForm.patchValue({
       subtotal: subtotal
@@ -146,7 +170,7 @@ export class OrderFormComponent implements OnInit {
   updateTotalAmount(): void {
     let total = 0;
     for (const item of this.items.controls) {
-      total += (item as FormGroup).get('subtotal')?.value || 0;
+      total += parseFloat((item as FormGroup).get('subtotal')?.value || '0');
     }
     this.orderForm.patchValue({
       totalAmount: total
@@ -170,28 +194,37 @@ export class OrderFormComponent implements OnInit {
 
     const formValue = {...this.orderForm.getRawValue()};
     
-    // Preparar os itens com os valores corretos
     const orderItems: OrderItem[] = formValue.items.map((item: any) => {
-      const productId = item.productId.toString();
+      const productIdStr = item.productId.toString();
+      const selectedProduct = this.selectedProducts[productIdStr];
+      const unitPrice = parseFloat(selectedProduct.price.toString());
+      const quantity = parseInt(item.quantity.toString());
       return {
-        productId: item.productId,
-        productName: this.selectedProducts[productId].name,
-        quantity: item.quantity,
-        unitPrice: this.selectedProducts[productId].price,
-        subtotal: item.quantity * this.selectedProducts[productId].price
+        productId: item.productId.toString(),
+        productName: selectedProduct.name,
+        quantity: quantity,
+        unitPrice: unitPrice,
+        subtotal: parseFloat((quantity * unitPrice).toFixed(2))
       };
     });
 
     const order: Order = {
       ...formValue,
+      totalAmount: parseFloat(formValue.totalAmount.toString()),
+      customerId: formValue.customerId.toString(),
+      enterpriseId: formValue.enterpriseId.toString(),
       items: orderItems,
-      // Se estiver editando, manter o ID
       ...(this.isEditMode && { id: this.order.id })
     };
 
     this.orderService.save(order).subscribe({
-      next: () => this.router.navigate(['/order']),
-      error: (error) => console.error('Erro ao salvar pedido', error)
+      next: () => {
+        this.toastService.showSuccess(this.isEditMode ? 'Pedido atualizado com sucesso!' : 'Pedido criado com sucesso!');
+        this.router.navigate(['/order']);
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
   }
 } 

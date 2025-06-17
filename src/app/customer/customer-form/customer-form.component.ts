@@ -5,6 +5,7 @@ import { Customer } from '../models/customer.type';
 import { CustomerService } from '../services/customer.service';
 import { ApplicationValidators } from 'src/app/core/validators/url.validator';
 import { cpfMask, maskitoElement, phoneMask } from 'src/app/core/constants/mask.constants';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -24,7 +25,8 @@ export class CustomerFormComponent implements OnInit {
   constructor(
     private customerService: CustomerService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -54,9 +56,14 @@ export class CustomerFormComponent implements OnInit {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
-      this.customerService.getById(id).subscribe(customer => {
-        this.customer = customer;
-        this.customerForm.patchValue(customer);
+      this.customerService.getById(id).subscribe({
+        next: (customer) => {
+          this.customer = customer;
+          this.customerForm.patchValue(customer);
+        },
+        error: (error) => {
+          this.toastService.handleError(error);
+        }
       });
     }
   }
@@ -77,8 +84,14 @@ export class CustomerFormComponent implements OnInit {
       ...formValue,
       id: this.activatedRoute.snapshot.params['id']
     };
-    this.customerService.save(customer).subscribe(() => {
-      this.router.navigate(['/customer']);
+    this.customerService.save(customer).subscribe({
+      next: () => {
+        this.toastService.showSuccess(this.isEditMode ? 'Cliente atualizado com sucesso!' : 'Cliente criado com sucesso!');
+        this.router.navigate(['/customer']);
+      },
+      error: (error) => {
+        this.toastService.handleError(error);
+      }
     });
   }
 } 

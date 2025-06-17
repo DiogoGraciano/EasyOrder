@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { dateMask, cnpjMask, maskitoElement, parseDateMask, formatDateMask } from 'src/app/core/constants/mask.constants';
+import { dateMask, cnpjMask, maskitoElement, parseDateMask, formatDateMask, formatISODateToBR } from 'src/app/core/constants/mask.constants';
 import { ApplicationValidators } from 'src/app/core/validators/url.validator';
 import { EnterpriseService } from '../services/enterprise.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Enterprise } from '../models/enterprise.type';
 import { take } from 'rxjs';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-enterprise-form',
@@ -43,6 +44,7 @@ export class EnterpriseFormComponent implements OnInit {
     private enterpriseService: EnterpriseService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -50,15 +52,20 @@ export class EnterpriseFormComponent implements OnInit {
     if (id) {
       this.enterpriseService.getById(id).pipe(
         take(1)
-      ).subscribe(enterprise => {
-        if (enterprise) {
-          const formattedEnterprise = {
-            ...enterprise,
-            foundationDate: enterprise.foundationDate instanceof Date 
-              ? formatDateMask(enterprise.foundationDate)
-              : enterprise.foundationDate
-          };
-          this.enterpriseForm.patchValue(formattedEnterprise);
+      ).subscribe({
+        next: (enterprise) => {
+          if (enterprise) {
+            const formattedEnterprise = {
+              ...enterprise,
+              foundationDate: enterprise.foundationDate instanceof Date 
+                ? formatDateMask(enterprise.foundationDate)
+                : formatISODateToBR(enterprise.foundationDate)
+            };
+            this.enterpriseForm.patchValue(formattedEnterprise);
+          }
+        },
+        error: (error) => {
+          this.toastService.handleError(error);
         }
       });
     }
@@ -78,8 +85,15 @@ export class EnterpriseFormComponent implements OnInit {
         id: this.activatedRoute.snapshot.params['id']
       };
 
-      this.enterpriseService.save(enterprise).subscribe(() => {
-        this.router.navigate(['/enterprise']);
+      this.enterpriseService.save(enterprise).subscribe({
+        next: () => {
+          const isEditMode = !!this.activatedRoute.snapshot.params['id'];
+          this.toastService.showSuccess(isEditMode ? 'Empresa atualizada com sucesso!' : 'Empresa criada com sucesso!');
+          this.router.navigate(['/enterprise']);
+        },
+        error: (error) => {
+          this.toastService.handleError(error);
+        }
       });
     }
   }
