@@ -76,7 +76,6 @@ export class ToastService {
     let errorMessage = 'Ocorreu um erro inesperado. Tente novamente.';
     
     if (error instanceof HttpErrorResponse) {
-      // Trata erros HTTP
       switch (error.status) {
         case 400:
           errorMessage = this.extractServerMessage(error) || 'Dados inválidos. Verifique as informações e tente novamente.';
@@ -113,9 +112,7 @@ export class ToastService {
   }
 
   private extractServerMessage(error: HttpErrorResponse): string | null {
-    // Tenta extrair mensagem do servidor em diferentes formatos
     if (error.error) {
-      // Formato: { message: "mensagem" }
       if (typeof error.error === 'string') {
         return error.error;
       }
@@ -124,17 +121,14 @@ export class ToastService {
         return error.error.message;
       }
       
-      // Formato: { error: "mensagem" }
       if (error.error.error) {
         return error.error.error;
       }
       
-      // Formato: { errors: ["mensagem1", "mensagem2"] }
       if (error.error.errors && Array.isArray(error.error.errors)) {
         return error.error.errors.join(', ');
       }
       
-      // Formato: { errors: { field: ["erro1", "erro2"] } }
       if (error.error.errors && typeof error.error.errors === 'object') {
         const errorMessages: string[] = [];
         Object.values(error.error.errors).forEach((fieldErrors: any) => {

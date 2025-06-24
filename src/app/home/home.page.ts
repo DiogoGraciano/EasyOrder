@@ -75,7 +75,7 @@ export class HomePage implements OnInit {
     this.totalProducts = this.products.length;
     
     // Total sales amount
-    this.totalSales = this.orders.reduce((sum, order) => sum + order.totalAmount, 0);
+    this.totalSales = this.orders.reduce((sum, order) => sum + (typeof order.totalAmount === 'string' ? parseFloat(order.totalAmount) : order.totalAmount), 0);
     
     // Count by status
     const pendingCount = this.orders.filter(order => order.status === 'pending').length;

@@ -51,12 +51,14 @@
         </p>
       </ion-item>
       <ion-item>
-        <ion-input formControlName="logo" labelPlacement="floating" label="Logo (URL)" type="url"></ion-input>
-        <p>
-        @if(hasError('logo', 'invalidUrl')) {
-          O campo de logo deve ser uma URL válida
+        <ion-label position="stacked">Logo da Empresa</ion-label>
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" style="margin-top: 10px;" />
+        @if(selectedFile) {
+          <div style="margin-top: 10px;">
+            <p><strong>Arquivo selecionado:</strong> {{ selectedFile.name }}</p>
+            <p><strong>Tamanho:</strong> {{ (selectedFile.size / 1024).toFixed(2) }} KB</p>
+          </div>
         }
-        </p>
       </ion-item>
       <ion-item>
         <ion-input formControlName="foundationDate" labelPlacement="floating" label="Data de Fundação" [maskito]="dateMask"

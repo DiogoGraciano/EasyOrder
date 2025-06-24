@@ -30,6 +30,11 @@ const formatDateMask = (date: Date) => {
   return maskitoStringifyDate(date,{mode: 'dd/mm/yyyy',separator:"/"});
 }
 
+const formatDateMaskToISO = (date: Date) => {
+  const dateString = maskitoStringifyDate(date,{mode: 'yyyy/mm/dd',separator:"-"});
+  return dateString.replace("/","-");
+}
+
 const formatISODateToBR = (isoDate: string): string => {
   if (!isoDate) return '';
   
@@ -48,5 +53,6 @@ export {
   maskitoElement,
   parseDateMask,
   formatDateMask,
-  formatISODateToBR
+  formatISODateToBR,
+  formatDateMaskToISO
 }

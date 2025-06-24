@@ -19,6 +19,7 @@ export class EnterpriseFormComponent implements OnInit {
   dateMask = dateMask;
   cnpjMask = cnpjMask;
   maskitoElement = maskitoElement;
+  selectedFile: File | null = null;
 
   enterpriseForm: FormGroup = new FormGroup({
     legalName: new FormControl('', [
@@ -26,9 +27,6 @@ export class EnterpriseFormComponent implements OnInit {
     ]),
     tradeName: new FormControl('', [
       Validators.required, Validators.minLength(3), Validators.maxLength(150)
-    ]),
-    logo: new FormControl(null, [
-      ApplicationValidators.urlValidator
     ]),
     foundationDate: new FormControl('', [Validators.required]),
     cnpj: new FormControl('', [
@@ -76,6 +74,27 @@ export class EnterpriseFormComponent implements OnInit {
     return formControl?.touched && formControl?.errors?.[error];
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.toastService.showError('Por favor, selecione apenas arquivos de imagem (JPEG, PNG, GIF, WebP)');
+        event.target.value = '';
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.toastService.showError('O arquivo deve ter no máximo 5MB');
+        event.target.value = '';
+        return;
+      }
+
+      this.selectedFile = file;
+    }
+  }
+
   save() {
     if (this.enterpriseForm.valid) {
       const formValue = this.enterpriseForm.value;
@@ -85,7 +104,7 @@ export class EnterpriseFormComponent implements OnInit {
         id: this.activatedRoute.snapshot.params['id']
       };
 
-      this.enterpriseService.save(enterprise).subscribe({
+      this.enterpriseService.save(enterprise, this.selectedFile).subscribe({
         next: () => {
           const isEditMode = !!this.activatedRoute.snapshot.params['id'];
           this.toastService.showSuccess(isEditMode ? 'Empresa atualizada com sucesso!' : 'Empresa criada com sucesso!');
